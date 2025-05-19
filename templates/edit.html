@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Item</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f5;
+            color: #1f2937;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode {
+            background-color: #1f2937;
+            color: #f4f4f5;
+        }
+
+        header {
+            background-color: #3b82f6;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        h1 {
+            font-weight: 600;
+        }
+
+        label {
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 4px;
+            margin-bottom: 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            background-color: #2563eb;
+        }
+
+        .dark-mode input, .dark-mode select {
+            background-color: #374151;
+            color: white;
+            border-color: #4b5563;
+        }
+
+        .toggle-dark {
+            background: none;
+            border: 2px solid white;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+            color: #3b82f6;
+            font-weight: 500;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>✏️ Edit Item</h1>
+    <button class="toggle-dark" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+</header>
+
+<div class="container">
+    <form method="POST">
+        <label>Item Name</label>
+        <input type="text" name="name" value="{{ item[1] }}" required>
+
+        <label>MRP (₹)</label>
+        <input type="number" name="mrp" step="0.01" value="{{ item[2] }}" required>
+
+        <label>Discount (%)</label>
+        <input type="number" name="discount" step="0.01" value="{{ item[3] }}" required>
+
+        <label>Quantity</label>
+        <input type="number" name="quantity" value="{{ item[4] }}" required>
+
+        <label>Category</label>
+        <select name="category" required>
+            <option value="Grocery" {% if item[5] =='Grocery' %}selected{% endif %}>Grocery</option>
+            <option value="Electronics" {% if item[5] =='Electronics' %}selected{% endif %}>Electronics</option>
+            <option value="Books" {% if item[5] =='Books' %}selected{% endif %}>Books</option>
+            <option value="Clothing" {% if item[5] =='Clothing' %}selected{% endif %}>Clothing</option>
+            <option value="Household" {% if item[5] =='Household' %}selected{% endif %}>Household</option>
+        </select>
+
+        <label>Date</label>
+        <input type="date" name="date" value="{{ item[7] }}" required>
+
+        <button class="btn" type="submit">Update Item</button>
+    </form>
+    <br>
+    <a href="{{ url_for('index') }}">← Back to Cart</a>
+</div>
+
+<script>
+    function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+    }
+</script>
+</body>
+</html>

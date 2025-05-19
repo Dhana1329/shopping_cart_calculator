@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping Cart Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f5;
+            color: #1f2937;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode {
+            background-color: #1f2937;
+            color: #f4f4f5;
+        }
+
+        header {
+            background-color: #3b82f6;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h1 {
+            font-weight: 600;
+        }
+
+        label {
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            margin-bottom: 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        .dark-mode tr:hover {
+            background-color: #374151;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            background-color: #2563eb;
+        }
+
+        .edit-btn, .delete-btn {
+            margin-right: 8px;
+            text-decoration: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+
+        .edit-btn {
+            background-color: #10b981;
+        }
+
+        .delete-btn {
+            background-color: #ef4444;
+        }
+
+        .dark-mode input, .dark-mode select {
+            background-color: #374151;
+            color: white;
+            border-color: #4b5563;
+        }
+
+        .toggle-dark {
+            background: none;
+            border: 2px solid white;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        body.light-mode {
+      background-color: #f5f5f5;
+      color: #222;
+    }
+    body.dark-mode {
+      background-color: #121212;
+      color: #eee;
+    }
+    /* Other styles ... */
+    .savings-tips {
+      background-color: #2a2a2a;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .savings-tips.light-mode {
+      background-color: #ddd;
+      color: #222;
+    }
+    .savings-tips ul {
+      list-style: disc inside;
+    }
+    </style>
+</head>
+<body>
+<header>
+    <h1>🛒 Shopping Cart Calculator</h1>
+    <button class="toggle-dark" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <div>Welcome, {{ username }} | <a href="{{ url_for('logout') }}">Logout</a></div>
+</header>
+
+<div class="container">
+
+
+    <!-- Savings Tips Section -->
+    <div id="savingsTips" class="savings-tips">
+      <h3>Monthly Savings Tips</h3>
+      <ul>
+        {% for tip in savings_tips %}
+          <li>{{ tip }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <form method="POST">
+        <label>Item Name</label>
+        <input type="text" name="name" required>
+
+        <label>MRP (₹)</label>
+        <input type="number" name="mrp" step="0.01" required>
+
+        <label>Discount (%)</label>
+        <input type="number" name="discount" step="0.01" value=" ">
+
+        <label>Quantity</label>
+        <input type="number" name="quantity" value=" " min="1" required>
+
+        <label>Category</label>
+        <select name="category" required>
+            <option value="Grocery">Grocery</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Books">Books</option>
+            <option value="Clothing">Clothing</option>
+            <option value="Household">Household</option>
+        </select>
+
+        <label>Date</label>
+        <input type="date" name="date" required>
+
+        <button class="btn" type="submit">Add Item</button>
+    </form>
+
+    <h2>🧾 Current Items</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>MRP</th>
+            <th>Discount %</th>
+            <th>Quantity</th>
+            <th>Category</th>
+            <th>Final Price (₹)</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+        {% for item in items %}
+        <tr>
+            <td>{{ item[0] }}</td>
+            <td>{{ item[1] }}</td>
+            <td>₹{{ '%.2f' % item[2] }}</td>
+            <td>{{ item[3] }}</td>
+            <td>{{ item[4] }}</td>
+            <td>{{ item[5] }}</td>
+            <td>₹{{ '%.2f' % item[6] }}</td>
+            <td>{{ item[7] }}</td>
+            <td>
+                <a href="{{ url_for('edit_item', item_id=item[0]) }}" class="edit-btn">Edit</a>
+                <a href="{{ url_for('delete_item', item_id=item[0]) }}" class="delete-btn" onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
+
+
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2 style="margin-top: 2rem;">💰 Total: ₹{{ '%.2f' % total }}</h2>
+</div>
+
+<script>
+    document.body.classList.toggle(localStorage.getItem('darkMode') === 'true');
+
+    function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+</script>
+
+
+
+<script>
+  document.getElementById('themeToggle').addEventListener('change', () => {
+    fetch('/toggle-theme', { method: 'POST' })
+      .then(() => location.reload());
+  });
+
+  window.onload = () => {
+    if ("{{ theme }}" === "dark") {
+      document.body.classList.add('dark-mode');
+    }
+  };
+</script>
+
+<script>
+    // Auto toggle dark/light theme based on system time (7 PM to 7 AM = dark mode)
+    function applyTheme() {
+      const hour = new Date().getHours();
+      const body = document.body;
+      const tipsDiv = document.getElementById('savingsTips');
+      if (hour >= 19 || hour < 7) {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        tipsDiv.classList.add('dark-mode');
+        tipsDiv.classList.remove('light-mode');
+      } else {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+        tipsDiv.classList.add('light-mode');
+        tipsDiv.classList.remove('dark-mode');
+      }
+    }
+    applyTheme();
+  </script>
+
+</body>
+</html>
