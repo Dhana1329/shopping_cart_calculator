@@ -27,5 +27,5 @@ A modern Flask-based shopping cart application designed to help middle-class fam
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/shopping-cart-calculator.git
+   git clone https://github.com/Dhana1329/shopping-cart-calculator.git
    cd shopping-cart-calculator
